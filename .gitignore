@@ -1,0 +1,10 @@
+include server/.gitignore
+include websites/.gitignore
+*.DS_Store
+*.idea
+
+*.iml
+
+docker-compose/docker-compose-prod.yml
+
+data

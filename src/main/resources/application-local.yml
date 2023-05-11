@@ -1,0 +1,14 @@
+app-config:
+  proxy:
+    enable: false
+    host: 127.0.0.1
+    port: 1087
+  apiKeys: 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
+  apiHost: https://www.liankebang.net/transflux
+  dailyLimit: 2
+
+logging:
+  level:
+    root: DEBUG
+    com:
+      opaigc: DEBUG

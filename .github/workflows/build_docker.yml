@@ -1,0 +1,45 @@
+name: build_docker
+
+on:
+  release:
+    types: [ created ] # 表示在创建新的 Release 时触发
+
+# 写一个workflow，用于构建docker镜像，runner名为server-ci,tag是self-hosted,os是ubuntu-20.04,并基于Dockerfile进行打包
+jobs:
+  build:
+    environment: production
+    runs-on: [ self-hosted ]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Get release version
+        run: echo "::set-output name=version::$(echo $GITHUB_REF | sed 's/refs\/tags\///')"
+        id: get_version
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_REPOSITORY }}:${{ steps.get_version.outputs.version }} .
+          docker tag ${{ secrets.DOCKER_REPOSITORY }}:${{ steps.get_version.outputs.version }} ${{ secrets.DOCKER_REPOSITORY }}:latest
+        id: build_image
+      - name: Push Docker image
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ steps.get_version.outputs.version }}
+          docker push ${{ secrets.DOCKER_REPOSITORY }}:latest
+        id: push_image
+      - name: Deploy project
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.REMOTE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            cd ${{ secrets.REMOTE_DEPLOY_PATH }}
+            VERSION=${{ steps.get_version.outputs.version }}
+            REPO=${{ secrets.DOCKER_REPOSITORY }}
+            sed -i "s#image: ${REPO}:.*#image: ${REPO}:${VERSION}#g" docker-compose.yml
+            docker-compose up -d
+          
+          
+  
