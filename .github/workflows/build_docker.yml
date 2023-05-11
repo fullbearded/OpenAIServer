@@ -7,7 +7,7 @@ on:
 # 写一个workflow，用于构建docker镜像，runner名为server-ci,tag是self-hosted,os是ubuntu-20.04,并基于Dockerfile进行打包
 jobs:
   build:
-    environment: production
+    environment: prod
     runs-on: [ self-hosted ]
     steps:
       - name: Checkout Code
