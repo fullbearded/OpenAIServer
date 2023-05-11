@@ -29,7 +29,7 @@ public class Constants {
 
 	public static final String CHAT_WITH_ANONYMOUS_USER_KEY = "anonymous";
 
-	public static final Long DEFAULT_APP_ID = 1l;
+	public static final Long DEFAULT_APP_ID = 0l;
 
 	public static final String MOBILE_REGEX = "^1[3-9]\\d{9}$";
 

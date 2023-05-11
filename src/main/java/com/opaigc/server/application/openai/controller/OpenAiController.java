@@ -94,6 +94,7 @@ public class OpenAiController {
 		}
 
 		OpenAiService.ChatParameters parameters = OpenAiService.ChatParameters.builder().chatType(UserChat.ChatCategoryEnum.FREE)
+			.appCode(req.getCode())
 			.messages(buildMessages(app.getRoles(), req.getMessages())).remoteIp(request.getRemoteAddr()).type(MessageType.TEXT)
 			.temperature(Optional.ofNullable(app.getExt()).map(f -> f.getDouble("temperature")).orElse(null))
 			.sessionId(Constants.CHAT_WITH_ANONYMOUS_USER_KEY).build();
@@ -116,11 +117,13 @@ public class OpenAiController {
 		OpenAiService.ChatParameters parameters =
 			OpenAiService.ChatParameters.builder().chatType(UserChat.ChatCategoryEnum.FREE).messages(req.getMessages())
 				.temperature(req.getTemperature())
+				.appCode("TEST_APP")
 				.remoteIp(request.getRemoteAddr()).type(MessageType.TEXT).sessionId(Constants.CHAT_WITH_ANONYMOUS_USER_KEY).build();
 		return openAiService.chatSend(parameters);
 	}
 
 	/**
+	 * 提供给chat聊天使用
 	 * 非匿名接口，需要用户登录，无查询的限制，但是会有费用的限制
 	 */
 	@PostMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
@@ -135,6 +138,7 @@ public class OpenAiController {
 
 		OpenAiService.ChatParameters parameters =
 			OpenAiService.ChatParameters.builder().chatType(chatType).messages(req.getMessages()).remoteIp(request.getRemoteAddr())
+					.appCode("OMNI_AIGC")
 				.type(MessageType.TEXT).sessionId(userCode).build();
 		return openAiService.chatSend(parameters);
 	}
