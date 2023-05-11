@@ -6,3 +6,5 @@ Dockerfile
 */.*
 !.env
 server/target
+
+application-local.yml
