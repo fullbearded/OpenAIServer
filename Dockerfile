@@ -3,6 +3,8 @@ FROM maven:3.8.3-openjdk-17 as backend
 
 WORKDIR /app
 
+COPY / /app
+
 RUN mvn clean package -DskipTests=true
 
 # service
