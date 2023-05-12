@@ -59,14 +59,13 @@ public class UserController {
         return ApiResponse.success(userInfoDTO);
     }
 
-
     @PostMapping("/create")
     public ApiResponse create(@NotNull(message = "请登录后再操作") AccountSession session,
                               @RequestBody UserCreateParam req) {
 
         User admin = userService.getByCode(session.getCode()).get();
-        if (!admin.getUserType().equals(User.UserType.ADMIN)) {
-            throw new AppException("001","非管理员不允许创建用户");
+        if (!admin.getUserType().equals(User.UserType.SUPER_ADMIN)) {
+            throw new AppException("001","非超级管理员不允许创建用户");
         }
 
         String password = Optional.ofNullable(req.getPassword()).orElse("V123456@a");

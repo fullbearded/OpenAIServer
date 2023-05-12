@@ -37,6 +37,11 @@ public class User implements Serializable {
 	private String code;
 
 	/**
+	 * 组织ID
+	 **/
+	private Long organizationId;
+
+	/**
 	 * 用户名
 	 **/
 	private String username;
@@ -132,7 +137,15 @@ public class User implements Serializable {
 
 	@Getter
 	public enum UserType {
-		ADMIN("ADMIN"),SYSTEM("系统用户"), USER("普通用户");
+		// 超级管理员，开发者本人
+		SUPER_ADMIN("超级管理员"),
+		// 系统用户，指系统生成的用户，无实际意义，用于测试等
+		SYSTEM("系统用户"),
+
+		// 管理员，如企业老板等
+		ADMIN("管理员"),
+		// 普通用户
+		USER("普通用户");
 
 		private String desc;
 

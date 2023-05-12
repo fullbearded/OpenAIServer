@@ -63,6 +63,7 @@ public enum CommonResponseCode implements ApiResponseCode {
 	APP_NAME_EXIST("300006", "应用名称已存在", BAD_REQUEST.value()),
 	APP_WITH_ANONYMOUS_MAX_LIMIT("300007", "每天匿名应用创建数量已达上限,请登录", BAD_REQUEST.value()),
 	APP_NOT_FOUND("300008", "应用未找到", NOT_FOUND.value()),
+	CHAT_OVER_MAX_TOKEN("300009", "查询超过了会员最大的 Token 长度，请精简语言", NOT_FOUND.value()),
 	;
 
 	private final String code;
