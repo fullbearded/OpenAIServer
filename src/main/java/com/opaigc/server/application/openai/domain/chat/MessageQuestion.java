@@ -38,7 +38,7 @@ public class MessageQuestion {
 		this.appId = Optional.ofNullable(appId).orElse(Constants.DEFAULT_APP_ID);
 		this.messageType = messageType;
 		this.messages = messages;
-		this.messages = originMessages;
+		this.originMessages = originMessages;
 		this.remoteIp = remoteIp;
 		this.chatType = chatType;
 		this.temperature = Optional.ofNullable(temperature).orElse(null);
