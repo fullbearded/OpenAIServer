@@ -6,7 +6,7 @@ import com.opaigc.server.application.user.domain.Organization;
 /**
  * 描述
  *
- * @author huhongda@fiture.com
+ * @author runner.dada@gmail.com
  * @date 2023/4/9
  */
 public interface OrganizationService extends IService<Organization> {

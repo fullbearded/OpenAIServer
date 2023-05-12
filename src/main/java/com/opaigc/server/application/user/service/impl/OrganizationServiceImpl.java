@@ -10,7 +10,7 @@ import com.opaigc.server.application.user.service.OrganizationService;
 /**
  * 描述
  *
- * @author huhongda@fiture.com
+ * @author runner.dada@gmail.com
  * @date 2023/4/9
  */
 @Service

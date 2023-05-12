@@ -3,7 +3,7 @@ package com.opaigc.server.application.openai.domain.chat;
 /**
  * 描述
  *
- * @author huhongda@fiture.com
+ * @author runner.dada@gmail.com
  * @date 2023/3/28
  */
 

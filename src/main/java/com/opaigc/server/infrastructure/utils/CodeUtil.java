@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * 描述
  *
- * @author huhongda@fiture.com
+ * @author runner.dada@gmail.com
  * @date 2023/4/4
  */
 public class CodeUtil {
