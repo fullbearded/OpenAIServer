@@ -96,8 +96,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		Member member = memberService.findOrCreateByUserId(user.getId());
 
 		UserMemberDTO userMemberDTO = new UserMemberDTO();
-		BeanUtils.copyProperties(user, userMemberDTO);
 
+		BeanUtils.copyProperties(user, userMemberDTO);
+		userMemberDTO.setUserType(user.getUserType());
 		userMemberDTO.setExpireDate(member.getExpireDate());
 		userMemberDTO.setDailyLimit(member.getDailyLimit());
 		userMemberDTO.setUsedQuota(member.getUsedQuota());

@@ -64,20 +64,17 @@ public class User implements Serializable {
 	/**
 	 * 用户类型
 	 **/
-	@Builder.Default
-	private UserType userType = UserType.USER;
+	private UserType userType;
 
 	/**
 	 * 性别
 	 **/
-	@Builder.Default
-	private Sex sex = Sex.MAN;
+	private Sex sex;
 
 	/**
 	 * 状态
 	 **/
-	@Builder.Default
-	private UserStatusEnum status = UserStatusEnum.ENABLE;
+	private UserStatusEnum status;
 
 	/**
 	 * 注册IP
@@ -135,7 +132,7 @@ public class User implements Serializable {
 
 	@Getter
 	public enum UserType {
-		SYSTEM("系统用户"), USER("普通用户");
+		ADMIN("ADMIN"),SYSTEM("系统用户"), USER("普通用户");
 
 		private String desc;
 

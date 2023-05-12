@@ -42,5 +42,4 @@ public class AuthController {
 		userService.create(req);
 		return ApiResponse.success();
 	}
-
 }
