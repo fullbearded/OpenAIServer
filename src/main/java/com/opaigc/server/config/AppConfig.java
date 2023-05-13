@@ -48,6 +48,11 @@ public class AppConfig {
 	 **/
 	private Long anonymousCreateLimit;
 
+	/**
+	 * 会话最大的Token长度
+	 **/
+	private Integer maxToken;
+
 	public String getApiToken() {
 		List<String> keyList = ListUtil.toList(apiKeys.split(","));
 		if (keyList.size() == 1) {

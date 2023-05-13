@@ -3,6 +3,8 @@ package com.opaigc.server.application.user.event.listener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -18,6 +20,7 @@ import com.opaigc.server.application.user.service.UserService;
 import com.opaigc.server.infrastructure.common.Constants;
 import com.opaigc.server.infrastructure.utils.TokenCounter;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +82,12 @@ public class ChatStreamCompletedSubscriber {
 			.category(event.getQuestions().getChatType())
 			.createdBy(event.getSessionId())
 			.build();
+
+		if (Objects.nonNull(event.getQuestions().getOriginMessages()) &&
+				!CollectionUtils.isEmpty(event.getQuestions().getOriginMessages())) {
+			userChat.setExt(new JSONObject().fluentPut("originMessages",
+					JSONArray.parse(JSONArray.toJSONString(event.getQuestions().getOriginMessages()))));
+		}
 		userChatService.save(userChat);
 	}
 }

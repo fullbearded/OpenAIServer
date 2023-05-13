@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.opaigc.server.application.openai.client.OpenAiClient;
 import com.opaigc.server.application.openai.domain.chat.MessageQuestion;
@@ -36,8 +37,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class OpenAiServiceImpl implements OpenAiService {
 
-    private final static Integer MAX_TOKEN = 2000;
-
     @Autowired
     private AppConfig appConfig;
     @Autowired
@@ -55,15 +54,17 @@ public class OpenAiServiceImpl implements OpenAiService {
 
         App app = appService.getByCode(parameters.getAppCode());
 
-        List<Message> countMessages = finallyRequestMessages(parameters.getMessages());
+        List<Message> cloneMessages = JSONArray.parseArray(JSONArray.toJSONString(parameters.getMessages()), Message.class);
+        List<Message> countMessages = finallyRequestMessages(cloneMessages);
 
         if (CollectionUtils.isEmpty(countMessages)) {
             throw new AppException(CommonResponseCode.CHAT_OVER_MAX_TOKEN);
         }
 
+        // 保存原始消息时，如果clone的消息与原始消息数量不一致，则只保存clone的消息，意味着计算出来的消息是超过了最大的限制了
         MessageQuestion userMessage = new MessageQuestion(MessageType.TEXT,
                 countMessages,
-                parameters.getMessages(),
+                parameters.getMessages().size() == countMessages.size() ? List.of() : parameters.getMessages(),
                 parameters.getRemoteIp(),
                 parameters.getChatType(),
                 Optional.ofNullable(app).map(App::getId).orElse(null),
@@ -76,12 +77,12 @@ public class OpenAiServiceImpl implements OpenAiService {
         TokenCounter tokenCounter = new TokenCounter();
         int tokenCount = tokenCounter.countMessages(messages);
 
-        if (tokenCount <= MAX_TOKEN) {
+        if (tokenCount <= appConfig.getMaxToken()) {
             // 如果当前消息列表的token数量小于等于最大限制，则直接返回该列表
             return messages;
         } else {
-            // 如果当前消息列表的token数量超过最大限制，则递归删除最后一条消息
-            messages.remove(messages.size() - 1);
+            // 如果当前消息列表的token数量超过最大限制，则递归删除第一条消息
+            messages.remove(0);
             return finallyRequestMessages(messages); // 递归调用自己，直到token数量小于等于最大限制
         }
     }

@@ -60,6 +60,12 @@ public class UserChat {
 	private JSONObject answers;
 
 	/**
+	 * APP扩展信息
+	 */
+	@TableField(typeHandler = FastjsonTypeHandler.class)
+	private JSONObject ext;
+
+	/**
 	 * 创建时间
 	 **/
 	private LocalDateTime createdAt;

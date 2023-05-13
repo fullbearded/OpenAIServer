@@ -96,4 +96,4 @@ app-config:
   anonymousPreviewLimit: ${ANONYMOUS_PREVIEW_LIMIT:100}
   # 每天每个IP创建100次应用查询
   anonymousQueryLimit: ${ANONYMOUS_QUERY_LIMIT:100}
-
+  maxToken: ${MAX_TOKEN:3000}
