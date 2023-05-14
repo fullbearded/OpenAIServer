@@ -18,9 +18,12 @@ import com.opaigc.server.infrastructure.exception.AppException;
 import com.opaigc.server.infrastructure.http.ApiResponse;
 import com.opaigc.server.infrastructure.utils.CodeUtil;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +52,16 @@ public class UserController {
     private AppConfig appConfig;
 
     /**
+     * 获取用户列表
+     **/
+    @PostMapping("/list")
+    public ApiResponse list(@RequestBody UserService.ListParam req, @NotNull(message = "请登录后再操作") AccountSession session) {
+        req.setOrganizationId(session.getOrganizationId());
+        List<UserService.UserMemberDTO> list = userService.list(req);
+        return ApiResponse.success(list);
+    }
+
+    /**
      * 获取用户信息
      **/
     @PostMapping("/info")
@@ -57,6 +70,24 @@ public class UserController {
         UserService.UserInfoDTO userInfoDTO = new UserService.UserInfoDTO();
         BeanUtils.copyProperties(userMemberDTO, userInfoDTO);
         return ApiResponse.success(userInfoDTO);
+    }
+
+    /**
+     * 修改用户密码
+     **/
+    @PostMapping("/password/change")
+    public ApiResponse passwordChange(@RequestBody @Valid UserPasswordChangeParam req, @NotNull(message = "请登录后再操作") AccountSession session) {
+        userService.passwordChange(req);
+        return ApiResponse.success();
+    }
+
+    /**
+     * 修改用户
+     **/
+    @PostMapping("/update")
+    public ApiResponse update(@RequestBody @Valid UserService.UserUpdateParam req, @NotNull(message = "请登录后再操作") AccountSession session) {
+        userService.update(req);
+        return ApiResponse.success();
     }
 
     @PostMapping("/create")
@@ -78,6 +109,7 @@ public class UserController {
                 .remark(req.getRemark())
                 .registerIp(Optional.ofNullable(req.getRegisterIp()).orElse("127.0.0.1"))
                 .userType(User.UserType.USER)
+                .organizationId(req.getOrganizationId())
                 .createdBy(session.getUsername())
                 .updatedBy(session.getUsername())
                 .build();
@@ -108,6 +140,16 @@ public class UserController {
         return ApiResponse.success(user);
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class UserPasswordChangeParam {
+        @NotNull(message = "不能为空")
+        private String code;
+        @Size(min = 6, message = "长度不能小于6位")
+        private String password;
+    }
 
     @Data
     @NoArgsConstructor
@@ -124,6 +166,7 @@ public class UserController {
 
         private String remark;
 
+        private Long organizationId;
         /**
          * 会员到期日
          **/

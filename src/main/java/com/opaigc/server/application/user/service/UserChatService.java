@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 描述
@@ -27,19 +29,55 @@ public interface UserChatService extends IService<UserChat> {
 
     Long todayUsedQuota(Long userId);
 
-	List<UserChat> list(ListParam req);
+	@Data
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	class UserChatDTO {
+		/**s
+		 * 使用的用户id
+		 */
+		private Long id;
 
-	Page<UserChat> page(PageParam req);
+		/**s
+		 * 使用的用户id
+		 */
+		private String username;
+
+		/**
+		 * 使用的用户id
+		 */
+		private String userCode;
+
+		/**
+		 * token 大小
+		 */
+		private Integer token;
+
+		private JSONObject questions;
+
+		private JSONObject answers;
+		/**
+		 * 创建时间
+		 **/
+		private LocalDateTime createdAt;
+	}
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     class ListParam {
+
 		/**
 		 * 使用的用户id
 		 */
-		private Long userId;
+		private String username;
+
+		/**
+		 * 组织ID
+		 **/
+		private Long organizationId;
 
 		/**
 		 * 使用的APP id

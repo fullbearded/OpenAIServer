@@ -26,6 +26,8 @@ public class AccountSession {
 
 	private String username;
 
+	private Long organizationId;
+
 	private String email;
 
 	private String mobile;

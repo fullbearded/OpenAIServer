@@ -1,14 +1,18 @@
 package com.opaigc.server.application.user.service;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.opaigc.server.application.user.controller.UserController;
 import com.opaigc.server.application.user.domain.User;
+import com.opaigc.server.infrastructure.enums.EntityStatusEnum;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +28,8 @@ public interface UserService extends IService<User> {
 
 	User create(UserRegistrationParam req);
 
+	void update(UserUpdateParam req);
+
 	User findById(Long id);
 
 	Optional<User> getByUsername(String username);
@@ -37,6 +43,64 @@ public interface UserService extends IService<User> {
 	Boolean delete(Long id);
 
 	UserMemberDTO getUserInfo(String code);
+
+	List<UserService.UserMemberDTO> list(UserService.ListParam req);
+
+	void passwordChange(UserController.UserPasswordChangeParam req);
+
+
+	List<UserChatService.UserChatDTO> userChatList(UserChatService.ListParam req, User manager);
+
+	Page<UserChatService.UserChatDTO> userChatPage(UserChatService.PageParam req, User manager);
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	class ListParam {
+		/**
+		 * 组织ID
+		 **/
+		private Long organizationId;
+		/**
+		 * 状态
+		 **/
+		private EntityStatusEnum status;
+		/**
+		 * 用户类型
+		 **/
+		private User.UserType userType;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	class UserUpdateParam {
+		private String code;
+
+		@Size(min = 4, max = 12, message = "用户名长度不能小于4位不能大于12位")
+		private String username;
+
+		@Pattern(regexp = "^(1[3-9])\\d{9}$", message = "手机号格式不正确")
+		private String mobile;
+		/**
+		 * 头像
+		 **/
+		private String avatar;
+		/**
+		 * 性别
+		 **/
+		private User.Sex sex;
+		/**
+		 * 状态
+		 **/
+		private EntityStatusEnum status;
+		/**
+		 * 备注
+		 **/
+		private String remark;
+	}
 
 	@Data
 	@NoArgsConstructor
@@ -71,10 +135,19 @@ public interface UserService extends IService<User> {
 		 * 用户名
 		 **/
 		private String username;
+
+		/**
+		 * 组织ID
+		 **/
+		private Long organizationId;
+		/**
+		 * 组织名
+		 **/
+		private String organizationName;
 		/**
 		 * 状态
 		 **/
-		private User.UserStatusEnum status;
+		private EntityStatusEnum status;
 		/**
 		 * 用户类型
 		 **/

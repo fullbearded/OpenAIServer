@@ -54,8 +54,18 @@ public class OpenAiServiceImpl implements OpenAiService {
 
         App app = appService.getByCode(parameters.getAppCode());
 
+
+
         List<Message> cloneMessages = JSONArray.parseArray(JSONArray.toJSONString(parameters.getMessages()), Message.class);
+        TokenCounter tokenCounter = new TokenCounter();
+        int cloneToken = tokenCounter.countMessages(cloneMessages);
+
         List<Message> countMessages = finallyRequestMessages(cloneMessages);
+        int finallyToken = tokenCounter.countMessages(countMessages);
+
+        log.info("@Calulate origin message token: {}, finally message token: {}", cloneToken, finallyToken);
+
+
 
         if (CollectionUtils.isEmpty(countMessages)) {
             throw new AppException(CommonResponseCode.CHAT_OVER_MAX_TOKEN);

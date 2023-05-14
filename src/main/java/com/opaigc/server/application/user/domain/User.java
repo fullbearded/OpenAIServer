@@ -3,6 +3,7 @@ package com.opaigc.server.application.user.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.opaigc.server.infrastructure.enums.EntityStatusEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -79,7 +80,7 @@ public class User implements Serializable {
 	/**
 	 * 状态
 	 **/
-	private UserStatusEnum status;
+	private EntityStatusEnum status;
 
 	/**
 	 * 注册IP
@@ -123,17 +124,9 @@ public class User implements Serializable {
 		MAN, WOMAN, UNKNOWN
 	}
 
-	@Getter
-	public enum UserStatusEnum {
-		ENABLE("正常"), BANNED("禁用");
-
-		private String desc;
-
-		UserStatusEnum(String desc) {
-			this.desc = desc;
-		}
+	public boolean isAdmin() {
+		return UserType.ADMIN.equals(userType) || UserType.SUPER_ADMIN.equals(userType);
 	}
-
 
 	@Getter
 	public enum UserType {

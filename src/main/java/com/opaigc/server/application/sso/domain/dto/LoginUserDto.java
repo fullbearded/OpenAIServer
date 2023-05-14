@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.opaigc.server.application.user.domain.User;
+import com.opaigc.server.infrastructure.enums.EntityStatusEnum;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,13 +33,15 @@ public class LoginUserDto implements UserDetails {
 
 	private String username;
 
+	private Long organizationId;
+
 	private String email;
 
 	private String mobile;
 
 	private String avatar;
 
-	private User.UserStatusEnum status;
+	private EntityStatusEnum status;
 
 	private User user;
 
@@ -82,11 +85,11 @@ public class LoginUserDto implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return User.UserStatusEnum.ENABLE.equals(getStatus());
+		return EntityStatusEnum.ENABLED.equals(getStatus());
 	}
 
 	public boolean isBanned() {
-		return User.UserStatusEnum.BANNED.equals(getStatus());
+		return EntityStatusEnum.DISABLED.equals(getStatus());
 	}
 
 }
