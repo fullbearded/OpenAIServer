@@ -159,6 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMemberDTO.setUsedQuota(member.getUsedQuota());
         userMemberDTO.setTotalQuota(member.getTotalQuota());
         userMemberDTO.setTodayUsedQuota(userChatService.todayUsedQuota(member.getUserId()));
+        userMemberDTO.setEquities(member.getEquities());
 
         if (member.isFreeUser()) {
             userMemberDTO.setDailyLimit(appConfig.getDailyLimit());

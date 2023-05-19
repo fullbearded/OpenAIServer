@@ -1,6 +1,9 @@
 package com.opaigc.server.application.user.service;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.opaigc.server.application.user.controller.UserController;
@@ -184,6 +187,11 @@ public interface UserService extends IService<User> {
 		 * 当天使用额度
 		 **/
 		private Long todayUsedQuota;
+
+		/**
+		 * 权益
+		 **/
+		private JSONObject equities;
 
 		public Boolean isExpired() {
 			return expireDate.isBefore(LocalDateTime.now());
