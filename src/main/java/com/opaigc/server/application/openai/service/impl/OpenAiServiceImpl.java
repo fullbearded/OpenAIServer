@@ -54,8 +54,6 @@ public class OpenAiServiceImpl implements OpenAiService {
 
         App app = appService.getByCode(parameters.getAppCode());
 
-
-
         List<Message> cloneMessages = JSONArray.parseArray(JSONArray.toJSONString(parameters.getMessages()), Message.class);
         TokenCounter tokenCounter = new TokenCounter();
         int cloneToken = tokenCounter.countMessages(cloneMessages);
@@ -65,11 +63,11 @@ public class OpenAiServiceImpl implements OpenAiService {
 
         log.info("@Calulate origin message token: {}, finally message token: {}", cloneToken, finallyToken);
 
-
-
         if (CollectionUtils.isEmpty(countMessages)) {
             throw new AppException(CommonResponseCode.CHAT_OVER_MAX_TOKEN);
         }
+
+        String model = Optional.ofNullable(parameters.getModel()).orElse(Constants.DEFAULT_MODEL);
 
         // 保存原始消息时，如果clone的消息与原始消息数量不一致，则只保存clone的消息，意味着计算出来的消息是超过了最大的限制了
         MessageQuestion userMessage = new MessageQuestion(MessageType.TEXT,
@@ -78,9 +76,10 @@ public class OpenAiServiceImpl implements OpenAiService {
                 parameters.getRemoteIp(),
                 parameters.getChatType(),
                 Optional.ofNullable(app).map(App::getId).orElse(null),
-                parameters.getTemperature()
+                parameters.getTemperature(),
+                model
         );
-        return sendToOpenAi(parameters.getSessionId(), openAiClient, userMessage);
+        return sendToOpenAi(parameters.getSessionId(), openAiClient, userMessage, model);
     }
 
     private List<Message> finallyRequestMessages(List<Message> messages) {
@@ -98,12 +97,12 @@ public class OpenAiServiceImpl implements OpenAiService {
     }
 
 
-    private Flux<String> sendToOpenAi(String sessionId, OpenAiClient openAiClient, MessageQuestion userMessage) {
+    private Flux<String> sendToOpenAi(String sessionId, OpenAiClient openAiClient, MessageQuestion userMessage, String model) {
         return Flux.create(emitter -> {
             OpenAISubscriber subscriber = new OpenAISubscriber(emitter, sessionId, this, userMessage);
             Flux<String> openAiResponse =
                     openAiClient.getChatResponse(appConfig.getApiToken(), sessionId, userMessage.getMessages(),
-                            null, userMessage.getTemperature(), null);
+                            null, userMessage.getTemperature(), null, model);
             openAiResponse.subscribe(subscriber);
             emitter.onDispose(subscriber);
         });

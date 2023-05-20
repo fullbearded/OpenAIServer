@@ -48,6 +48,7 @@ public interface OpenAiService extends CompletedCallBack {
 		private UserChat.ChatCategoryEnum chatType;
 		private String appCode;
 		private Double temperature;
+		private String model;
 	}
 
 	@Data
@@ -92,6 +93,7 @@ public interface OpenAiService extends CompletedCallBack {
 		private List<Message> messages;
 		@NotBlank(message = "token is required")
 		private String token;
+		private String model;
 	}
 
 	@Data

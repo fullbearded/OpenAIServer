@@ -27,6 +27,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @TableName(value = "member", autoResultMap = true)
 public class Member {
+
     @TableId(type = IdType.AUTO)
     private Long id;
     /**

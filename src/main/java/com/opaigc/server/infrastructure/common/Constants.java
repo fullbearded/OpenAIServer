@@ -15,6 +15,8 @@ public class Constants {
 
 	public static final String USER_CODE_KEY = "code";
 
+	public static final String DEFAULT_MODEL = "gpt-3.5-turbo";
+
 	public static final String CHAT_STREAM_COMPLETED_TOPIC = "chat.stream.completed.topic";
 
 

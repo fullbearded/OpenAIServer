@@ -138,6 +138,7 @@ public class OpenAiController {
 
 		OpenAiService.ChatParameters parameters =
 			OpenAiService.ChatParameters.builder().chatType(chatType).messages(req.getMessages()).remoteIp(request.getRemoteAddr())
+					.model(Objects.nonNull(req.getModel()) ? req.getModel() : Constants.DEFAULT_MODEL)
 					.appCode("OMNI_AIGC")
 				.type(MessageType.TEXT).sessionId(userCode).build();
 		return openAiService.chatSend(parameters);
